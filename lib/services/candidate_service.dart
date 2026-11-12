@@ -43,4 +43,16 @@ class CandidateService {
     await prefs.setString(_storageKey, data);
     return true;
   }
+
+  // find the candidate with this last name and email, null if not found
+  Future<Candidate?> login(String lastName, String email) async {
+    final candidates = await getCandidates();
+    for (final candidate in candidates) {
+      if (candidate.lastName.toLowerCase() == lastName.toLowerCase() &&
+          candidate.email.toLowerCase() == email.toLowerCase()) {
+        return candidate;
+      }
+    }
+    return null;
+  }
 }

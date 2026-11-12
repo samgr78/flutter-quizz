@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import 'screens/register_page.dart';
+import 'screens/login_page.dart';
 
 void main() {
   runApp(const QuizzApp());
@@ -17,7 +17,7 @@ class QuizzApp extends StatelessWidget {
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.indigo),
       ),
-      home: const RegisterPage(),
+      home: const LoginPage(),
     );
   }
 }
