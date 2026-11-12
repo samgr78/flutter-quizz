@@ -1,97 +1,93 @@
 import 'package:flutter/material.dart';
 
-import '../models/candidat.dart';
-import '../services/candidat_service.dart';
-import 'accueil_page.dart';
+import '../models/candidate.dart';
+import '../services/candidate_service.dart';
+import 'home_page.dart';
 
-/// Page contenant le formulaire d'inscription d'un candidat.
-class InscriptionPage extends StatefulWidget {
-  const InscriptionPage({super.key});
+class RegisterPage extends StatefulWidget {
+  const RegisterPage({super.key});
 
   @override
-  State<InscriptionPage> createState() => _InscriptionPageState();
+  State<RegisterPage> createState() => _RegisterPageState();
 }
 
-class _InscriptionPageState extends State<InscriptionPage> {
-  // Clé qui permet de valider tous les champs du formulaire d'un coup.
+class _RegisterPageState extends State<RegisterPage> {
+  // key to validate all form
   final _formKey = GlobalKey<FormState>();
 
-  // Un contrôleur par champ texte pour récupérer ce que l'utilisateur tape.
-  final _nomController = TextEditingController();
-  final _prenomController = TextEditingController();
+  final _lastNameController = TextEditingController();
+  final _firstNameController = TextEditingController();
   final _emailController = TextEditingController();
   final _ageController = TextEditingController();
-  final _adresseController = TextEditingController();
+  final _addressController = TextEditingController();
 
   String? _motivation;
 
-  final _service = CandidatService();
+  final _service = CandidateService();
 
   @override
   void dispose() {
-    _nomController.dispose();
-    _prenomController.dispose();
+    _lastNameController.dispose();
+    _firstNameController.dispose();
     _emailController.dispose();
     _ageController.dispose();
-    _adresseController.dispose();
+    _addressController.dispose();
     super.dispose();
   }
 
-  /// Vérifie qu'un champ obligatoire n'est pas vide.
-  String? _validerObligatoire(String? valeur) {
-    if (valeur == null || valeur.trim().isEmpty) {
+  // if field is empty
+  String? _validateRequired(String? value) {
+    if (value == null || value.trim().isEmpty) {
       return 'Ce champ est obligatoire';
     }
     return null;
   }
 
-  /// Vérifie que l'email est rempli et a un format correct (ex: nom@mail.fr).
-  String? _validerEmail(String? valeur) {
-    if (valeur == null || valeur.trim().isEmpty) {
+
+  String? _validateEmail(String? value) {
+    if (value == null || value.trim().isEmpty) {
       return 'Ce champ est obligatoire';
     }
     final regex = RegExp(r'^[\w.-]+@[\w-]+\.[a-zA-Z]{2,}$');
-    if (!regex.hasMatch(valeur.trim())) {
+    if (!regex.hasMatch(value.trim())) {
       return 'Email incorrect';
     }
     return null;
   }
 
-  /// Vérifie que l'âge est un nombre entre 15 et 99.
-  String? _validerAge(String? valeur) {
-    if (valeur == null || valeur.trim().isEmpty) {
+  String? _validateAge(String? value) {
+    if (value == null || value.trim().isEmpty) {
       return 'Ce champ est obligatoire';
     }
-    final age = int.tryParse(valeur.trim());
-    if (age == null || age < 15 || age > 99) {
-      return 'Âge incorrect (entre 15 et 99)';
+    final age = int.tryParse(value.trim());
+    if (age == null || age < 1 || age > 99) {
+      return 'Âge incorrect';
     }
     return null;
   }
 
-  /// Appelée quand on appuie sur le bouton "S'inscrire".
-  Future<void> _inscrire() async {
-    // Si un champ n'est pas valide, les messages d'erreur s'affichent
-    // sous les champs concernés et on s'arrête là.
+  Future<void> _register() async {
+    // If a field is not valid, the error messages are shown
+    // under the fields and we stop here.
     if (!_formKey.currentState!.validate()) {
       return;
     }
 
-    final candidat = Candidat(
-      nom: _nomController.text.trim(),
-      prenom: _prenomController.text.trim(),
+    final candidate = Candidate(
+      lastName: _lastNameController.text.trim(),
+      firstName: _firstNameController.text.trim(),
       email: _emailController.text.trim(),
       age: int.parse(_ageController.text.trim()),
-      adresse: _adresseController.text.trim(),
+      address: _addressController.text.trim(),
       motivation: _motivation!,
     );
 
-    final bool reussi = await _service.inscrire(candidat);
+    final bool success = await _service.register(candidate);
 
-    // On vérifie que la page est toujours affichée après l'attente.
+
     if (!mounted) return;
 
-    if (!reussi) {
+    if (!success) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
           content: Text('Un compte existe déjà avec ce nom et cet email'),
@@ -103,7 +99,7 @@ class _InscriptionPageState extends State<InscriptionPage> {
 
     Navigator.pushReplacement(
       context,
-      MaterialPageRoute(builder: (context) => AccueilPage(candidat: candidat)),
+      MaterialPageRoute(builder: (context) => HomePage(candidate: candidate)),
     );
   }
 
@@ -119,31 +115,31 @@ class _InscriptionPageState extends State<InscriptionPage> {
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
               TextFormField(
-                controller: _nomController,
+                controller: _lastNameController,
                 decoration: const InputDecoration(labelText: 'Nom *'),
-                validator: _validerObligatoire,
+                validator: _validateRequired,
               ),
               TextFormField(
-                controller: _prenomController,
+                controller: _firstNameController,
                 decoration: const InputDecoration(labelText: 'Prénom *'),
-                validator: _validerObligatoire,
+                validator: _validateRequired,
               ),
               TextFormField(
                 controller: _emailController,
                 decoration: const InputDecoration(labelText: 'Email *'),
                 keyboardType: TextInputType.emailAddress,
-                validator: _validerEmail,
+                validator: _validateEmail,
               ),
               TextFormField(
                 controller: _ageController,
                 decoration: const InputDecoration(labelText: 'Âge *'),
                 keyboardType: TextInputType.number,
-                validator: _validerAge,
+                validator: _validateAge,
               ),
               TextFormField(
-                controller: _adresseController,
+                controller: _addressController,
                 decoration: const InputDecoration(labelText: 'Adresse postale *'),
-                validator: _validerObligatoire,
+                validator: _validateRequired,
               ),
               DropdownButtonFormField<String>(
                 initialValue: _motivation,
@@ -151,17 +147,17 @@ class _InscriptionPageState extends State<InscriptionPage> {
                 items: motivations
                     .map((m) => DropdownMenuItem(value: m, child: Text(m)))
                     .toList(),
-                onChanged: (valeur) {
+                onChanged: (value) {
                   setState(() {
-                    _motivation = valeur;
+                    _motivation = value;
                   });
                 },
-                validator: (valeur) =>
-                    valeur == null ? 'Choisissez une motivation' : null,
+                validator: (value) =>
+                    value == null ? 'Choisissez une motivation' : null,
               ),
               const SizedBox(height: 24),
               ElevatedButton(
-                onPressed: _inscrire,
+                onPressed: _register,
                 child: const Text("S'inscrire"),
               ),
             ],
