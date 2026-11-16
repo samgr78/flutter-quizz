@@ -1,0 +1,80 @@
+{
+  "Java": [
+    {
+      "question": "Quel mot-clé permet de créer un objet en Java ?",
+      "answers": ["create", "new", "make", "object"],
+      "correctAnswer": 1,
+      "time": 20
+    },
+    {
+      "question": "Quel type permet de stocker un nombre entier ?",
+      "answers": ["String", "boolean", "int", "char"],
+      "correctAnswer": 2,
+      "time": 15
+    },
+    {
+      "question": "Quelle méthode est le point d'entrée d'un programme Java ?",
+      "answers": ["start()", "main()", "run()", "init()"],
+      "correctAnswer": 1,
+      "time": 15
+    },
+    {
+      "question": "Quel mot-clé permet d'hériter d'une classe ?",
+      "answers": ["implements", "inherits", "extends", "super"],
+      "correctAnswer": 2,
+      "time": 20
+    }
+  ],
+  "Algo": [
+    {
+      "question": "Combien de fois s'exécute une boucle « pour i de 1 à 5 » ?",
+      "answers": ["4", "5", "6", "1"],
+      "correctAnswer": 1,
+      "time": 20
+    },
+    {
+      "question": "Quelle structure permet de répéter tant qu'une condition est vraie ?",
+      "answers": ["si", "tant que", "fonction", "variable"],
+      "correctAnswer": 1,
+      "time": 15
+    },
+    {
+      "question": "Que vaut 17 modulo 5 ?",
+      "answers": ["2", "3", "3.4", "5"],
+      "correctAnswer": 0,
+      "time": 20
+    },
+    {
+      "question": "Quelle recherche nécessite un tableau trié ?",
+      "answers": ["Recherche séquentielle", "Recherche dichotomique", "Aucune", "Les deux"],
+      "correctAnswer": 1,
+      "time": 25
+    }
+  ],
+  "HTML/CSS": [
+    {
+      "question": "Quelle balise crée un lien ?",
+      "answers": ["<link>", "<a>", "<href>", "<url>"],
+      "correctAnswer": 1,
+      "time": 15
+    },
+    {
+      "question": "Quelle propriété CSS change la couleur du texte ?",
+      "answers": ["font-color", "text-color", "color", "background"],
+      "correctAnswer": 2,
+      "time": 15
+    },
+    {
+      "question": "Quelle balise contient le titre principal d'une page ?",
+      "answers": ["<h1>", "<head>", "<title>", "<p>"],
+      "correctAnswer": 0,
+      "time": 20
+    },
+    {
+      "question": "Comment sélectionner un élément avec l'id « menu » en CSS ?",
+      "answers": [".menu", "#menu", "menu", "*menu"],
+      "correctAnswer": 1,
+      "time": 20
+    }
+  ]
+}

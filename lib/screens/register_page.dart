@@ -97,9 +97,11 @@ class _RegisterPageState extends State<RegisterPage> {
       return;
     }
 
-    Navigator.pushReplacement(
+    // go to home and remove the login and register pages behind
+    Navigator.pushAndRemoveUntil(
       context,
       MaterialPageRoute(builder: (context) => HomePage(candidate: candidate)),
+      (route) => false,
     );
   }
 
