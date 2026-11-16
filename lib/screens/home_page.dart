@@ -68,6 +68,7 @@ class _HomePageState extends State<HomePage> {
     _loadData();
   }
 
+  //opens the Profile page once the button has been clicked
   void _openProfile() {
     Navigator.push(
       context,
