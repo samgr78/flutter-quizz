@@ -12,6 +12,15 @@ class Question {
     required this.time,
   });
 
+  Map<String, dynamic> toJson() {
+    return {
+      'question': question,
+      'answers': answers,
+      'correctAnswer': correctAnswer,
+      'time': time,
+    };
+  }
+
   factory Question.fromJson(Map<String, dynamic> json) {
     return Question(
       question: json['question'],
