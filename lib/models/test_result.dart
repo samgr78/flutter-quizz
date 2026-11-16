@@ -1,5 +1,4 @@
 class TestResult {
-  // lastName + email identify the candidate (unique account)
   final String lastName;
   final String email;
   final String category;

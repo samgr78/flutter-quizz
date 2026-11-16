@@ -3,7 +3,6 @@ class Question {
   final List<String> answers;
   // index of the good answer in the answers list
   final int correctAnswer;
-  // time limit in seconds
   final int time;
 
   Question({

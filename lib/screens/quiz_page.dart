@@ -57,7 +57,6 @@ class _QuizPageState extends State<QuizPage> {
       setState(() {
         _timeLeft--;
       });
-      // time is over: go to the next question
       if (_timeLeft <= 0) {
         _nextQuestion();
       }
@@ -65,15 +64,14 @@ class _QuizPageState extends State<QuizPage> {
   }
 
   void _nextQuestion() {
-    // avoid saving the result twice if the button is pressed again
+    // avoid save if button push twice
     if (_finished) return;
     _timer?.cancel();
 
     if (_selectedAnswer == _currentQuestion.correctAnswer) {
       _score++;
     }
-
-    // last question: the test is finished
+    // if last question
     if (_currentIndex == widget.questions.length - 1) {
       _finished = true;
       _finishTest();
@@ -116,7 +114,6 @@ class _QuizPageState extends State<QuizPage> {
     );
 
     if (!mounted) return;
-    // back to the home page
     Navigator.pop(context);
   }
 
@@ -125,7 +122,7 @@ class _QuizPageState extends State<QuizPage> {
     final question = _currentQuestion;
     final bool isLast = _currentIndex == widget.questions.length - 1;
 
-    // PopScope blocks the back button: the test can't be left and restarted
+    // PopScope blocks the back button
     return PopScope(
       canPop: false,
       child: Scaffold(
