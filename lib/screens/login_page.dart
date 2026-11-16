@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../services/candidate_service.dart';
+import 'admin/admin_login_page.dart';
 import 'home_page.dart';
 import 'register_page.dart';
 
@@ -96,6 +97,15 @@ class _LoginPageState extends State<LoginPage> {
                   );
                 },
                 child: const Text('Créer un compte'),
+              ),
+              TextButton(
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => const AdminLoginPage()),
+                  );
+                },
+                child: const Text('Espace administrateur'),
               ),
             ],
           ),
