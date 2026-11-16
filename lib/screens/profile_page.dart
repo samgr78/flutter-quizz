@@ -1,11 +1,17 @@
 import 'package:flutter/material.dart';
 
 import '../models/candidate.dart';
+import '../models/test_result.dart';
 
 class ProfilePage extends StatelessWidget {
   final Candidate candidate;
+  final List<TestResult> results;
 
-  const ProfilePage({super.key, required this.candidate});
+  const ProfilePage({
+    super.key,
+    required this.candidate,
+    required this.results,
+  });
 
   Widget _info(String label, String value) {
     return ListTile(title: Text(label), subtitle: Text(value));
@@ -24,6 +30,22 @@ class ProfilePage extends StatelessWidget {
           _info('Âge', '${candidate.age} ans'),
           _info('Adresse postale', candidate.address),
           _info('Motivation', candidate.motivation),
+          const SizedBox(height: 24),
+          const Text('Mes résultats', style: TextStyle(fontSize: 20)),
+          const SizedBox(height: 8),
+          if (results.isEmpty)
+            const Text('Aucun test réalisé pour le moment.')
+          else
+            for (final result in results)
+              Card(
+                child: ListTile(
+                  title: Text(result.category),
+                  trailing: Text(
+                    '${result.score} / ${result.total}',
+                    style: const TextStyle(fontSize: 16),
+                  ),
+                ),
+              ),
         ],
       ),
     );
