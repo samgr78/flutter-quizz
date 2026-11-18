@@ -7,6 +7,7 @@ import '../services/question_service.dart';
 import '../services/result_service.dart';
 import 'login_page.dart';
 import 'quiz_page.dart';
+import 'profile_page.dart';
 
 class HomePage extends StatefulWidget {
   final Candidate candidate;
@@ -67,6 +68,19 @@ class _HomePageState extends State<HomePage> {
     _loadData();
   }
 
+  //opens the Profile page once the button has been clicked
+  void _openProfile() {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => ProfilePage(
+          candidate: widget.candidate,
+          results: _results,
+        ),
+      ),
+    );
+  }
+
   void _logout() {
     Navigator.pushReplacement(
       context,
@@ -80,6 +94,10 @@ class _HomePageState extends State<HomePage> {
       appBar: AppBar(
         title: const Text('Évaluations'),
         actions: [
+          TextButton(
+            onPressed: _openProfile,
+            child: const Text('Profil'),
+          ),
           IconButton(
             icon: const Icon(Icons.logout),
             tooltip: 'Se déconnecter',
@@ -90,17 +108,17 @@ class _HomePageState extends State<HomePage> {
       body: _loading
           ? const Center(child: CircularProgressIndicator())
           : ListView(
-              padding: const EdgeInsets.all(16),
-              children: [
-                Text(
-                  'Bienvenue ${widget.candidate.firstName} ${widget.candidate.lastName} !',
-                  style: const TextStyle(fontSize: 20),
-                ),
-                const SizedBox(height: 16),
-                // one card per category
-                for (final category in _questions.keys) _buildTestCard(category),
-              ],
-            ),
+        padding: const EdgeInsets.all(16),
+        children: [
+          Text(
+            'Bienvenue ${widget.candidate.firstName} ${widget.candidate.lastName} !',
+            style: const TextStyle(fontSize: 20),
+          ),
+          const SizedBox(height: 16),
+          // one card per category
+          for (final category in _questions.keys) _buildTestCard(category),
+        ],
+      ),
     );
   }
 
@@ -116,9 +134,9 @@ class _HomePageState extends State<HomePage> {
             : Text('Test terminé : ${result.score} / ${result.total}'),
         trailing: result == null
             ? ElevatedButton(
-                onPressed: () => _startTest(category),
-                child: const Text('Commencer'),
-              )
+          onPressed: () => _startTest(category),
+          child: const Text('Commencer'),
+        )
             : const Icon(Icons.check_circle, color: Colors.green),
       ),
     );

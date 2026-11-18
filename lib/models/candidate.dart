@@ -9,7 +9,7 @@ class Candidate {
   final String firstName;
   final String email;
   final int age;
-  final String address;
+  String address;
   final String motivation;
 
   Candidate({
