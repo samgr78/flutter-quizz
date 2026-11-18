@@ -4,6 +4,7 @@ import '../../models/question.dart';
 import '../../services/question_service.dart';
 import '../login_page.dart';
 import 'admin_quiz_page.dart';
+import 'admin_dashboard_page.dart';
 
 class AdminHomePage extends StatefulWidget {
   const AdminHomePage({super.key});
@@ -131,11 +132,21 @@ class _AdminHomePageState extends State<AdminHomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Gestion des quiz'),
+        title: const Text('Administration'),
         actions: [
           IconButton(
+            icon: const Icon(Icons.dashboard),
+            tooltip: 'Tableau de bord',
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => const AdminDashboardPage()),
+              );
+            },
+          ),
+          IconButton(
             icon: const Icon(Icons.logout),
-            tooltip: 'Se déconnecter',
+            tooltip: 'Déconnexion',
             onPressed: _logout,
           ),
         ],

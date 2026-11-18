@@ -87,12 +87,13 @@ class _QuizPageState extends State<QuizPage> {
 
   Future<void> _finishTest() async {
     final result = TestResult(
-      lastName: widget.candidate.lastName,
-      email: widget.candidate.email,
-      category: widget.category,
-      score: _score,
-      total: widget.questions.length,
-      date: DateTime.now(),
+    lastName: widget.candidate.lastName,
+    firstName: widget.candidate.firstName, 
+    email: widget.candidate.email,
+    category: widget.category,
+    score: _score,
+    total: widget.questions.length,
+    date: DateTime.now(),
     );
     await _resultService.saveResult(result);
 
