@@ -102,10 +102,20 @@ class _AdminQuizPageState extends State<AdminQuizPage> {
                     ' • ${question.time} s',
               ),
               onTap: () => _editQuestion(index),
-              trailing: IconButton(
-                icon: const Icon(Icons.delete),
-                tooltip: 'Supprimer',
-                onPressed: () => _deleteQuestion(index),
+              trailing: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  IconButton(
+                    icon: const Icon(Icons.edit),
+                    tooltip: 'Modifier',
+                    onPressed: () => _editQuestion(index),
+                  ),
+                  IconButton(
+                    icon: const Icon(Icons.delete),
+                    tooltip: 'Supprimer',
+                    onPressed: () => _deleteQuestion(index),
+                  ),
+                ],
               ),
             ),
           );
