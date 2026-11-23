@@ -1,8 +1,18 @@
 import 'package:flutter/material.dart';
 
+import 'config/database.dart';
 import 'screens/login_page.dart';
 
-void main() {
+Future<void> main() async {
+  // it reads the json files of assets
+  WidgetsFlutterBinding.ensureInitialized();
+
+  try {
+    await AppDatabase.init();
+  } catch (e) {
+    debugPrint('Cannot connect to MongoDB, is it started? $e');
+  }
+
   runApp(const QuizzApp());
 }
 
