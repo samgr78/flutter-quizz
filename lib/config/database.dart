@@ -36,9 +36,9 @@ class AppDatabase {
     await _addDefaultQuestions(db);
   }
 
-  static Future<void> _createIndexes(Db db) async {
-    final ignoreCase = {'locale': 'fr', 'strength': 2};
+  static const Map<String, Object> ignoreCase = {'locale': 'fr', 'strength': 2};
 
+  static Future<void> _createIndexes(Db db) async {
     await db.runCommand({
       'createIndexes': candidates,
       'indexes': [
@@ -80,11 +80,10 @@ class AppDatabase {
     final String data = await rootBundle.loadString('assets/questions.json');
     final Map<String, dynamic> json = jsonDecode(data);
 
+    // one document per quiz
     final List<Map<String, dynamic>> documents = [];
     json.forEach((category, list) {
-      for (final question in list) {
-        documents.add({'category': category, ...question});
-      }
+      documents.add({'category': category, 'questions': list});
     });
     await collection.insertMany(documents);
   }

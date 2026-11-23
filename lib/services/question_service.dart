@@ -1,37 +1,36 @@
-import 'dart:convert';
-
-import 'package:flutter/services.dart';
-import 'package:shared_preferences/shared_preferences.dart';
-
+import '../config/database.dart';
 import '../models/question.dart';
 
 class QuestionService {
-  static const String _storageKey = 'questions';
-
-  // first time : question from json
-  // 2nd time from the admin save
+  // returns { 'Java': [questions], 'Algo': [questions]}
   Future<Map<String, List<Question>>> getQuestions() async {
-    final prefs = await SharedPreferences.getInstance();
-    String? data = prefs.getString(_storageKey);
-    data ??= await rootBundle.loadString('assets/questions.json');
+    final collection = await AppDatabase.collection(AppDatabase.questions);
+    final list = await collection.find().toList();
 
-    final Map<String, dynamic> json = jsonDecode(data);
     final Map<String, List<Question>> questions = {};
-    json.forEach((category, list) {
-      questions[category] =
-          (list as List).map((item) => Question.fromJson(item)).toList();
-    });
+    for (final quiz in list) {
+      questions[quiz['category']] = (quiz['questions'] as List)
+          .map((item) => Question.fromJson(Map<String, dynamic>.from(item)))
+          .toList();
+    }
     return questions;
   }
 
-
+  // delete all quizz and save them again
   Future<void> saveQuestions(Map<String, List<Question>> questions) async {
-    final Map<String, dynamic> json = {};
+    final collection = await AppDatabase.collection(AppDatabase.questions);
+    await collection.deleteMany({});
+
+    final List<Map<String, dynamic>> documents = [];
     questions.forEach((category, list) {
-      json[category] = list.map((q) => q.toJson()).toList();
+      documents.add({
+        'category': category,
+        'questions': list.map((q) => q.toJson()).toList(),
+      });
     });
 
-    final prefs = await SharedPreferences.getInstance();
-    await prefs.setString(_storageKey, jsonEncode(json));
+    if (documents.isNotEmpty) {
+      await collection.insertMany(documents);
+    }
   }
 }
