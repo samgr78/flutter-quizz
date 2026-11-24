@@ -1,58 +1,34 @@
-import 'dart:convert';
-
-import 'package:shared_preferences/shared_preferences.dart';
-
+import '../config/database.dart';
 import '../models/candidate.dart';
 
 class CandidateService {
-  static const String _storageKey = 'candidates';
-
   // get all candidate
   Future<List<Candidate>> getCandidates() async {
-    final prefs = await SharedPreferences.getInstance();
-    final String? data = prefs.getString(_storageKey);
-    if (data == null) {
-      return [];
-    }
-    final List<dynamic> list = jsonDecode(data);
+    final collection = await AppDatabase.collection(AppDatabase.candidates);
+    final list = await collection.find().toList();
     return list.map((item) => Candidate.fromJson(item)).toList();
   }
 
-  // valide if email already existe (lowercase or uppercase dont matter)
-  Future<bool> alreadyExists(String lastName, String email) async {
-    final candidates = await getCandidates();
-    for (final candidate in candidates) {
-      if (candidate.lastName.toLowerCase() == lastName.toLowerCase() &&
-          candidate.email.toLowerCase() == email.toLowerCase()) {
-        return true;
-      }
-    }
-    return false;
-  }
-
-  // create new candidate account
-  Future<bool> register(Candidate candidate) async {
-    if (await alreadyExists(candidate.lastName, candidate.email)) {
-      return false;
-    }
-    final candidates = await getCandidates();
-    candidates.add(candidate);
-
-    final prefs = await SharedPreferences.getInstance();
-    final String data = jsonEncode(candidates.map((c) => c.toJson()).toList());
-    await prefs.setString(_storageKey, data);
-    return true;
-  }
-
-  // find the candidate with this last name and email, null if not found
+  // find the candidate with this last name and email
   Future<Candidate?> login(String lastName, String email) async {
-    final candidates = await getCandidates();
-    for (final candidate in candidates) {
-      if (candidate.lastName.toLowerCase() == lastName.toLowerCase() &&
-          candidate.email.toLowerCase() == email.toLowerCase()) {
-        return candidate;
-      }
-    }
-    return null;
+    final collection = await AppDatabase.collection(AppDatabase.candidates);
+    final list = await collection.modernFind(
+      filter: {'lastName': lastName, 'email': email},
+      rawOptions: {'collation': AppDatabase.ignoreCase},
+    ).toList();
+
+    if (list.isEmpty) return null;
+    return Candidate.fromJson(list.first);
+  }
+
+  Future<bool> alreadyExists(String lastName, String email) async {
+    return await login(lastName, email) != null;
+  }
+
+  // false if the account already exists
+  Future<bool> register(Candidate candidate) async {
+    final collection = await AppDatabase.collection(AppDatabase.candidates);
+    final result = await collection.insertOne(candidate.toJson());
+    return result.isSuccess;
   }
 }
